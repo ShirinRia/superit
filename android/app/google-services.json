@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "525504687169",
+    "project_id": "superit-f81ce",
+    "storage_bucket": "superit-f81ce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:525504687169:android:e756801063b46de4696ac0",
+        "android_client_info": {
+          "package_name": "com.example.superit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "525504687169-vl7d5m65qh9jnppmu6pbrkqcu2r0l11m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.superit",
+            "certificate_hash": "9f8692723d2a1eba550a07413164d63c2eb4be6e"
+          }
+        },
+        {
+          "client_id": "525504687169-i0pm9nes8v9o56rt4hoeq33b4h7n70kd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLeB9cXgikeDrxLZRpTMYdLNTmZox1iaY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "525504687169-i0pm9nes8v9o56rt4hoeq33b4h7n70kd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
