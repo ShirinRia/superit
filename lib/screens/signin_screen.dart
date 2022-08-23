@@ -4,7 +4,6 @@ import 'package:superit/screens/login_screen.dart';
 import 'package:superit/screens/passwordrecover_screen.dart';
 import 'package:superit/screens/signup_screen.dart';
 
-
 import '../resources/auth_methods.dart';
 import '../responsive/mobile_screen_layout.dart';
 import '../responsive/responsive_layout.dart';
@@ -59,7 +58,6 @@ class _SigninScreenState extends State<SigninScreen> {
     //   showSnackBar(context, res);
     // }
     if (res == 'success') {
-
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const ResponsiveLayout(
@@ -71,7 +69,7 @@ class _SigninScreenState extends State<SigninScreen> {
 
       //
     } else {
-      showSnackBar( context,res);
+      showSnackBar(context, res);
     }
     setState(() {
       _isLoading = false;
@@ -86,7 +84,7 @@ class _SigninScreenState extends State<SigninScreen> {
         child: Container(
           padding: MediaQuery.of(context).size.width > webScreenSize
               ? EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width / 3)
+                  horizontal: MediaQuery.of(context).size.width / 3)
               : const EdgeInsets.symmetric(horizontal: 32),
           width: double.infinity,
           child: Column(
@@ -124,20 +122,14 @@ class _SigninScreenState extends State<SigninScreen> {
               InkWell(
                 child: Container(
                   child:
-                  // !_isLoading
-                  //     ? const Text(
-                  //         'Log in',
-                  //       )
-                  //     : const CircularProgressIndicator(
-                  //         color: primaryColor,
-                  //       ),
-                  _isLoading
-                      ? const Center(
-                    child: CircularProgressIndicator(
-                      color: primaryColor,
-                    ),
-                  )
-                      : const Text('Log In'),
+
+                      _isLoading
+                          ? const Center(
+                              child: CircularProgressIndicator(
+                                color: primaryColor,
+                              ),
+                            )
+                          : const Text('Log In'),
                   width: double.infinity,
                   alignment: Alignment.center,
                   padding: const EdgeInsets.symmetric(vertical: 12),
@@ -160,7 +152,6 @@ class _SigninScreenState extends State<SigninScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-
                   GestureDetector(
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute(

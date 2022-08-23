@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:superit/screens/profilefeed.dart';
 import 'package:superit/screens/signin_screen.dart';
 import 'package:video_player/video_player.dart';
 
@@ -25,6 +26,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   var userData = {};
   int postLen = 0;
+  int followingLen = 0;
+  int followerLen = 0;
   int followers = 0;
   int following = 0;
   bool isFollowing = false;
@@ -55,11 +58,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .where('uid', isEqualTo: widget.uid)
           .get();
 
+      var followingSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.uid)
+          .collection('following')
+          .where('uid', isEqualTo: widget.uid)
+          .get();
+      var followerSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.uid)
+          .collection('follower')
+          .where('uid', isEqualTo: widget.uid)
+          .get();
+
       postLen = postSnap.docs.length;
+      followingLen = followingSnap.docs.length;
+      followerLen = followerSnap.docs.length;
 
       userData = userSnap.data()!;
-      followers = userSnap.data()!['followers'].length;
-      following = userSnap.data()!['following'].length;
+      // followers = userSnap.data()!['followers'].length;
+      // following = userSnap.data()!['following'].length;
       isFollowing = userSnap
           .data()!['followers']
           .contains(FirebaseAuth.instance.currentUser!.uid);
@@ -122,7 +140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 )),
                                       ),
                                       child: buildStatColumn(
-                                          following, "Following  "),
+                                          followingLen, "Following  "),
                                     ),
                                     InkWell(
                                         onTap: () => Navigator.of(context).push(
@@ -133,7 +151,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                       )),
                                             ),
                                         child: buildStatColumn(
-                                            followers, "Followers")),
+                                            followerLen, "Followers")),
                                   ],
                                 ),
                                 Row(
@@ -167,7 +185,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 borderColor: Colors.grey,
                                                 function: () async {
                                                   await FireStoreMethods()
-                                                      .followUser(
+                                                      .deletefollower(
                                                     FirebaseAuth.instance
                                                         .currentUser!.uid,
                                                     userData['uid'],
@@ -271,35 +289,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                         _controller.setLooping(true);
                         return snap['Type'] != 'video'
-                            ? Container(
-                                child: Image(
-                                  image: NetworkImage(snap['postUrl']),
-                                  fit: BoxFit.cover,
+                            ? InkWell(
+                                child: Container(
+                                  child: Image(
+                                    image: NetworkImage(snap['postUrl']),
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                              )
-                            : Stack(
-                                children: [
-                                  VideoPlayer(_controller),
-                                  IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        // pause
-                                        if (_controller.value.isPlaying) {
-                                          _controller.pause();
-                                        } else {
-                                          // play
-                                          _controller.play();
-                                        }
-                                      });
-                                    },
-                                    // icon
-                                    icon: Icon(
-                                      _controller.value.isPlaying
-                                          ? Icons.pause
-                                          : Icons.play_arrow,
+                                onTap: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => profileFeedScreen(
+                                      uid: widget.uid,
                                     ),
                                   ),
-                                ],
+                                ),
+                              )
+                            : InkWell(
+                                child: Stack(
+                                  children: [
+                                    VideoPlayer(_controller),
+                                    IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          // pause
+                                          if (_controller.value.isPlaying) {
+                                            _controller.pause();
+                                          } else {
+                                            // play
+                                            _controller.play();
+                                          }
+                                        });
+                                      },
+                                      // icon
+                                      icon: Icon(
+                                        _controller.value.isPlaying
+                                            ? Icons.pause
+                                            : Icons.play_arrow,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                onTap: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => profileFeedScreen(
+                                      uid: widget.uid,
+                                    ),
+                                  ),
+                                ),
                               );
                       },
                     );

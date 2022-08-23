@@ -173,14 +173,7 @@ class AuthMethods {
         res = "Please enter all the fields";
       }
     }
-    // on FirebaseAuthException catch (e) {
-    //   if (e.code == 'user-not-found') {
-    //     res = "The email is badly formatted";
-    //   }
-    //   else if(e.code=='wrong-password'){
-    //     res = "Password should be at least 6 characters";
-    //   }
-    // }
+
     catch (err) {
       return err.toString();
     }

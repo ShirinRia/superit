@@ -243,7 +243,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-
 import '../models/user.dart';
 import '../providers/user_provider.dart';
 import '../resources/firestore_methods.dart';
@@ -261,28 +260,29 @@ class _AddPostScreenState extends State<AddPostScreen> {
   Uint8List? _file;
   late String type;
   final TextEditingController _descriptionController = TextEditingController();
-  bool _isLoading =false;
+  bool _isLoading = false;
+
   void postImage(
-      String uid,
-      String username,
-      String profImage,
-      String type,
-      ) async {
+    String uid,
+    String username,
+    String profImage,
+    String type,
+  ) async {
     setState(() {
-      _isLoading=true;
+      _isLoading = true;
     });
     try {
       String res = await FireStoreMethods().uploadPost(
-          _descriptionController.text, _file!, uid, username, profImage,type);
+          _descriptionController.text, _file!, uid, username, profImage, type);
       if (res == 'success') {
         setState(() {
-          _isLoading=true;
+          _isLoading = true;
         });
         showSnackBar(context, 'posted!');
         clearImage();
       } else {
         setState(() {
-          _isLoading=false;
+          _isLoading = false;
         });
         showSnackBar(context, res);
       }
@@ -318,11 +318,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
                   Navigator.of(context).pop();
                   Uint8List file = await pickImage(
                     ImageSource.gallery,
-
                   );
                   setState(() {
                     _file = file;
-                    type="image";
+                    type = "image";
                   });
                 },
               ),
@@ -333,11 +332,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
                   Navigator.of(context).pop();
                   Uint8List file = await pickVideo(
                     ImageSource.gallery,
-
                   );
                   setState(() {
                     _file = file;
-                    type="video";
+                    type = "video";
                   });
                 },
               ),
@@ -352,11 +350,13 @@ class _AddPostScreenState extends State<AddPostScreen> {
           );
         });
   }
+
   void clearImage() {
     setState(() {
       _file = null;
     });
   }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -370,91 +370,105 @@ class _AddPostScreenState extends State<AddPostScreen> {
     if (user == null) {
       return const Center(
           child: CircularProgressIndicator(
-            color: Colors.white,
-          ));
+        color: Colors.white,
+      ));
     }
     return _file == null
         ? Center(
-      child: IconButton(
-        onPressed: () => _selectImage(context),
-        icon: const Icon(Icons.upload),
-      ),
-    )
-        : Scaffold(
-      appBar: AppBar(
-        backgroundColor: mobileBackgroundColor,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed:clearImage,
-        ),
-        title: const Text('Post to'),
-        centerTitle: false,
-        actions: [
-          TextButton(
-              onPressed: () => postImage(
-                user.uid,
-                user.username,
-                user.photoUrl,
-                type,
-              ),
-              child: const Text(
-                'Post',
-                style: TextStyle(
-                  color: Colors.blueAccent,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ))
-        ],
-      ),
-      body: Column(
-        children: [
-          _isLoading
-              ? const LinearProgressIndicator()
-              : const Padding(padding: EdgeInsets.only(top: 0.0)),
-          const Divider(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-
-              CircleAvatar(
-                backgroundImage: NetworkImage(
-                  user.photoUrl,
-                ),
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.45,
-                child: TextField(
-                  controller: _descriptionController,
-                  decoration: const InputDecoration(
-                    hintText: 'Write a caption...',
-                    border: InputBorder.none,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: () => _selectImage(context),
+                  icon: const Icon(
+                    Icons.cloud_upload_outlined,
+                    size: 50.0,
                   ),
-                  maxLines: 8,
                 ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Text(
+                  'Tap Here To Create a post',
+                  style: TextStyle(fontSize: 20.0),
+                )
+              ],
+            ),
+          )
+        : Scaffold(
+            appBar: AppBar(
+              backgroundColor: mobileBackgroundColor,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: clearImage,
               ),
-              SizedBox(
-                width: 45,
-                height: 45,
-                child: AspectRatio(
-                  aspectRatio: 487 / 451,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        fit: BoxFit.fill,
-                        alignment: FractionalOffset.topCenter,
-                        image: MemoryImage(_file!),
+              title: const Text('Post to'),
+              centerTitle: false,
+              actions: [
+                TextButton(
+                    onPressed: () => postImage(
+                          user.uid,
+                          user.username,
+                          user.photoUrl,
+                          type,
+                        ),
+                    child: const Text(
+                      'Post',
+                      style: TextStyle(
+                        color: Colors.blueAccent,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ))
+              ],
+            ),
+            body: Column(
+              children: [
+                _isLoading
+                    ? const LinearProgressIndicator()
+                    : const Padding(padding: EdgeInsets.only(top: 0.0)),
+                const Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(
+                        user.photoUrl,
                       ),
                     ),
-                  ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.45,
+                      child: TextField(
+                        controller: _descriptionController,
+                        decoration: const InputDecoration(
+                          hintText: 'Write a caption...',
+                          border: InputBorder.none,
+                        ),
+                        maxLines: 8,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 45,
+                      height: 45,
+                      child: AspectRatio(
+                        aspectRatio: 487 / 451,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              fit: BoxFit.fill,
+                              alignment: FractionalOffset.topCenter,
+                              image: MemoryImage(_file!),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-          const Divider(),
-        ],
-      ),
-    );
+                const Divider(),
+              ],
+            ),
+          );
   }
 }

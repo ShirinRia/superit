@@ -16,6 +16,7 @@ import 'like_animation.dart';
 
 class PostCard extends StatefulWidget {
   final snap;
+
   const PostCard({
     Key? key,
     required this.snap,
@@ -41,16 +42,15 @@ class _PostCardState extends State<PostCard> {
 
     _controller.setLooping(true);
 
-
     fetchCommentLen();
   }
+
   @override
   void dispose() {
     _controller.dispose();
 
     super.dispose();
   }
-
 
   fetchCommentLen() async {
     try {
@@ -79,18 +79,19 @@ class _PostCardState extends State<PostCard> {
       );
     }
   }
-  bookmarkPost(String description, String file, String uid,
-      String username, String profImage,String type,String postId) async {
+
+  bookmarkPost(String description, String file, String uid, String username,
+      String profImage, String type, String postId) async {
     try {
-     String res = await FireStoreMethods().bookmarks( description,  file,  uid,
-         username, profImage, type, postId);
-     if(res=='success'){
-       String text= "You have bookmarked this post";
-       showSnackBar(
-         context,
-         text,
-       );
-     }
+      String res = await FireStoreMethods()
+          .bookmarks(description, file, uid, username, profImage, type, postId);
+      if (res == 'success') {
+        String text = "You have bookmarked this post";
+        showSnackBar(
+          context,
+          text,
+        );
+      }
     } catch (err) {
       showSnackBar(
         context,
@@ -106,8 +107,8 @@ class _PostCardState extends State<PostCard> {
     if (user == null) {
       return const Center(
           child: CircularProgressIndicator(
-            color: Colors.white,
-          ));
+        color: Colors.white,
+      ));
     }
     return Container(
       // boundary needed for web
@@ -133,7 +134,8 @@ class _PostCardState extends State<PostCard> {
                 CircleAvatar(
                   radius: 16,
                   backgroundImage: NetworkImage(
-                    widget.snap['profImage'].toString(),
+                   // widget.snap['profImage'].toString(),
+                    'assets/download-_1_.png'
                   ),
                 ),
                 Expanded(
@@ -149,6 +151,7 @@ class _PostCardState extends State<PostCard> {
                           widget.snap['username'].toString(),
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
+                            color: Colors.yellow,
                           ),
                         ),
                       ],
@@ -157,44 +160,44 @@ class _PostCardState extends State<PostCard> {
                 ),
                 widget.snap['uid'].toString() == user.uid
                     ? IconButton(
-                  onPressed: () {
-                    showDialog(
-                      useRootNavigator: false,
-                      context: context,
-                      builder: (context) {
-                        return Dialog(
-                          child: ListView(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 16),
-                              shrinkWrap: true,
-                              children: [
-                                'Delete',
-                              ]
-                                  .map(
-                                    (e) => InkWell(
-                                    child: Container(
-                                      padding:
-                                      const EdgeInsets.symmetric(
-                                          vertical: 12,
-                                          horizontal: 16),
-                                      child: Text(e),
-                                    ),
-                                    onTap: () {
-                                      deletePost(
-                                        widget.snap['postId']
-                                            .toString(),
-                                      );
-                                      // remove the dialog box
-                                      Navigator.of(context).pop();
-                                    }),
-                              )
-                                  .toList()),
-                        );
-                      },
-                    );
-                  },
-                  icon: const Icon(Icons.more_vert),
-                )
+                        onPressed: () {
+                          showDialog(
+                            useRootNavigator: false,
+                            context: context,
+                            builder: (context) {
+                              return Dialog(
+                                child: ListView(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16),
+                                    shrinkWrap: true,
+                                    children: [
+                                      'Delete',
+                                    ]
+                                        .map(
+                                          (e) => InkWell(
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 12,
+                                                        horizontal: 16),
+                                                child: Text(e),
+                                              ),
+                                              onTap: () {
+                                                deletePost(
+                                                  widget.snap['postId']
+                                                      .toString(),
+                                                );
+                                                // remove the dialog box
+                                                Navigator.of(context).pop();
+                                              }),
+                                        )
+                                        .toList()),
+                              );
+                            },
+                          );
+                        },
+                        icon: const Icon(Icons.more_vert),
+                      )
                     : Container(),
               ],
             ),
@@ -217,34 +220,35 @@ class _PostCardState extends State<PostCard> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.35,
                   width: double.infinity,
-                  child: widget.snap['Type']=='video'?
-                  Stack(
-                    children: [
-                      VideoPlayer(_controller),
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            // pause
-                            if (_controller.value.isPlaying) {
-                              _controller.pause();
-                            } else {
-                              // play
-                              _controller.play();
-                            }
-                          });
-                        },
-                        // icon
-                        icon: Icon(
-                          _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                  child: widget.snap['Type'] == 'video'
+                      ? Stack(
+                          children: [
+                            VideoPlayer(_controller),
+                            IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  // pause
+                                  if (_controller.value.isPlaying) {
+                                    _controller.pause();
+                                  } else {
+                                    // play
+                                    _controller.play();
+                                  }
+                                });
+                              },
+                              // icon
+                              icon: Icon(
+                                _controller.value.isPlaying
+                                    ? Icons.pause
+                                    : Icons.play_arrow,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Image.network(
+                          widget.snap['postUrl'].toString(),
+                          fit: BoxFit.cover,
                         ),
-
-                      ),
-                    ],
-                  )
-                 : Image.network(
-                    widget.snap['postUrl'].toString(),
-                    fit: BoxFit.cover,
-                  ),
                 ),
                 AnimatedOpacity(
                   duration: const Duration(milliseconds: 200),
@@ -278,12 +282,12 @@ class _PostCardState extends State<PostCard> {
                 child: IconButton(
                   icon: widget.snap['likes'].contains(user.uid)
                       ? const Icon(
-                    Icons.favorite,
-                    color: Colors.red,
-                  )
+                          Icons.favorite,
+                          color: Colors.red,
+                        )
                       : const Icon(
-                    Icons.favorite_border,
-                  ),
+                          Icons.favorite_border,
+                        ),
                   onPressed: () => FireStoreMethods().likePost(
                     widget.snap['postId'].toString(),
                     user.uid,
@@ -310,22 +314,21 @@ class _PostCardState extends State<PostCard> {
               //     onPressed: () {}),
               Expanded(
                   child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: IconButton(
-                        icon: const Icon(Icons.bookmark_border),
-                        onPressed: () {
-                         bookmarkPost(
-                             widget.snap['description'].toString(),
-                           widget.snap['postUrl'].toString(),
-                           user.uid.toString(),
-                           widget.snap['username'].toString(),
-                           widget.snap['profImage'].toString(),
-                             widget.snap['Type'].toString(),
-                            widget.snap['postId'].toString(),
-
-                          );
-                        }),
-                  ))
+                alignment: Alignment.bottomRight,
+                child: IconButton(
+                    icon: const Icon(Icons.bookmark_border),
+                    onPressed: () {
+                      bookmarkPost(
+                        widget.snap['description'].toString(),
+                        widget.snap['postUrl'].toString(),
+                        user.uid.toString(),
+                        widget.snap['username'].toString(),
+                        widget.snap['profImage'].toString(),
+                        widget.snap['Type'].toString(),
+                        widget.snap['postId'].toString(),
+                      );
+                    }),
+              ))
             ],
           ),
           //DESCRIPTION AND NUMBER OF COMMENTS
@@ -357,6 +360,7 @@ class _PostCardState extends State<PostCard> {
                           text: widget.snap['username'].toString(),
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
+                            color: Colors.yellowAccent,
                           ),
                         ),
                         TextSpan(

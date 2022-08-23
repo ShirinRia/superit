@@ -179,7 +179,9 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
                           controller: _passwordController,
                           decoration: const InputDecoration(
                             hintText: 'Enter your Password',
+
                           ),
+                          obscureText:true,
                         ),
                         const SizedBox(
                           height: 24,

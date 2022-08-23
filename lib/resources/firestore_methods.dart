@@ -136,29 +136,37 @@ class FireStoreMethods {
 
       // if the likes list contains the user uid, we need to remove it
       String followId = const Uuid().v1();
+
       await _firestore
           .collection('users')
           .doc(uid)
           .collection('following')
-          .doc(followId)
+          .doc(followerId)
           .set({
         'profilePic': profilePic,
         'name': name,
         'uid': uid,
 
         'followId': followId,
-        'followerId':followerId,
+        'followingId':followerId,
 
       });
-
+      var userSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .get();
+     var u= {};
+     u=userSnap.data()!;
+     String followername= u['username'].toString();
+      String followerpic= u['photoUrl'].toString();
       await _firestore
           .collection('users')
           .doc(followerId)
           .collection('follower')
-          .doc(followId)
+          .doc(uid)
           .set({
-        'profilePic': profilePic,
-        'name': name,
+        'profilePic':followerpic,
+        'name': followername,
         'uid':followerId,
 
         'followId': followId,
@@ -173,29 +181,7 @@ class FireStoreMethods {
     //return res;
   }
 
-  //bookmark
-  // Future<String> bookmarks(String postId, String uid) async {
-  //   // asking uid here because we dont want to make extra calls to firebase auth when we can just get from our state management
-  //   String res = "Some error occurred";
-  //   try {
-  //
-  //     // String bookmarkId = const Uuid().v1(); // creates unique id based on time
-  //     String bookmarkId = const Uuid().v1();
-  //     bookmark book = bookmark(
-  //
-  //       uid: uid,
-  //
-  //
-  //       postId: postId,
-  //
-  //     );
-  //     _firestore.collection('bookmarkpost').doc(bookmarkId).set(book.toJson());
-  //     res = "success";
-  //   } catch (err) {
-  //     res = err.toString();
-  //   }
-  //   return res;
-  // }
+
   Future<String>bookmarks(String description, String file, String uid,
       String username, String profImage,String type,String postId
       ) async {
@@ -236,6 +222,20 @@ class FireStoreMethods {
       await _firestore.collection('users').doc(uid)
           .collection('bookmarks').doc(bookmarkId).delete();
       res = 'success';
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+  Future<String> deletefollower(String uid,String bookmarkId) async {
+    String res = "Some error occurred";
+    try {
+      await _firestore.collection('users').doc(bookmarkId)
+          .collection('follower').doc(uid).delete();
+      await _firestore.collection('users').doc(uid)
+          .collection('following').doc(bookmarkId).delete();
+      res = 'success';
+      followUser(uid, bookmarkId);
     } catch (err) {
       res = err.toString();
     }

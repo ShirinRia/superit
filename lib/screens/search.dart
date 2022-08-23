@@ -21,8 +21,6 @@ class searchdialogScreen extends StatefulWidget {
 }
 
 class _searchdialogScreenState extends State<searchdialogScreen> {
-
-
   // _selectsearch(BuildContext context) async {
   //   return showDialog(
   //       context: context,
@@ -67,47 +65,53 @@ class _searchdialogScreenState extends State<searchdialogScreen> {
   //       });
   // }
 
-
   @override
   Widget build(BuildContext context) {
-  return Scaffold(
-
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SimpleDialogOption(
-                    padding: const EdgeInsets.all(20),
-                    child: const Text('Search by user'),
-                    onPressed: () async {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => Searchbyuser(),
-                        ),
-                      );
-                    },
-                  ),
-                  SimpleDialogOption(
-                    padding: const EdgeInsets.all(20),
-                    child: const Text('Search by post'),
-                    onPressed: () async {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => Searchbypost(),
-                        ),
-                      );
-                    },
-                  ),
-                ],
+    return Scaffold(
+        body: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SimpleDialogOption(
+            padding: const EdgeInsets.all(20),
+            child: const Text(
+              'Search for user',
+              style: TextStyle(
+                fontSize: 16.0,
               ),
-              // IconButton(
-              //   onPressed: () => _selectsearch(context),
-              //   icon: const Icon(Icons.upload),
-              // ),
-
-            )
-          );
+            ),
+            onPressed: () async {
+              Navigator.of(context).pop();
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => Searchbyuser(),
+                ),
+              );
+            },
+          ),
+          SimpleDialogOption(
+            padding: const EdgeInsets.all(20),
+            child: const Text(
+              'Search for post',
+              style: TextStyle(
+                fontSize: 16.0,
+              ),
+            ),
+            onPressed: () async {
+              Navigator.of(context).pop();
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => Searchbypost(),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+      // IconButton(
+      //   onPressed: () => _selectsearch(context),
+      //   icon: const Icon(Icons.upload),
+      // ),
+    ));
   }
 }

@@ -133,8 +133,13 @@ class _SearchScreenState extends State<SearchScreen> {
                future: FirebaseFirestore.instance
                    .collection('posts')
                    .where(
+
+                 //isEqualTo: "Iot",
                  'description',
-                 isEqualTo: "Iot",
+                 //arrayContains:'Birthday of Sadib' ,
+                // isEqualTo: 'Birthday of Sadib',
+
+                 isGreaterThanOrEqualTo: 'Birthday'
                )
                    .get(),
                builder: (context, snapshot) {
